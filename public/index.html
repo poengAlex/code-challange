@@ -15,22 +15,61 @@
 
 <body>
   <div ID="vue-app" class="container">
-    <form class="form-inline mt-3" @submit="onSearch">
-      <div class="form-group mx-sm-3 mb-2">
-        <input v-model="q" type="text" class="form-control" id="search-input" placeholder="search">
-      </div>
-      <button type="submit" class="btn btn-primary mb-2">Search</button>
-    </form>
-    <!-- <div>{{videos}}</div> -->
-    <div class="row">
-      <div v-for="video in videos" v-on:click="showVideo(video)" class="card col-md-3 m-1 p-0">
-        <img v-bind:src="video.snippet.thumbnails.default.url" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">{{video.snippet.title}}</h5>
+    <div class="mx-auto" style="width: 400px;">
+      <form class="form-inline mt-3" @submit="onSearch">
+        <div class="form-group mx-sm-3 mb-2">
+          <input v-model="q" type="text" class="form-control" id="search-input" placeholder="search">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Search</button>
+      </form>
+    </div>
+    <div class="row row-cols-1 row-cols-md-4">
+      <div v-on:click="showVideo(video)" v-for="video in videos" class="col mb-4">
+        <div class="card">
+          <img v-bind:src="video.snippet.thumbnails.default.url"  class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title" style="height:100px;overflow: hidden;">{{video.snippet.title}}</h5>
+          </div>
         </div>
       </div>
+    
     </div>
-
+    <!-- <div class="row">
+      <div class="col-md-3">
+        <div v-for="video in videos" v-on:click="showVideo(video)" class="card">
+          <!-- <img v-bind:src="video.snippet.thumbnails.default.url" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{video.snippet.title}}</h5>
+          </div> -->
+          <!-- <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div> -->
+        <!--
+      </div>
+    </div>
+    <div class="row">
+      <div v-for="video in videos"  class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+    </div> -->
 
   </div>
 
@@ -42,13 +81,15 @@
         <div class="modal-body">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <div>
-            <iframe id="video-player" width="100%" height="350" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe id="video-player" width="100%" height="350" src="" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+
 
   <script src="https://code.jquery.com/jquery-3.5.1.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
@@ -70,7 +111,7 @@
           console.log(video);
           let url = YOUTUBE_EMBEDED_URL + video.id.videoId + "?autoplay=1";
           console.log(url);
-          $("#video-player").attr('src', url )
+          $("#video-player").attr('src', url)
           $('#video-modal').modal('show');
         },
         onSearch: (e) => {
@@ -105,20 +146,20 @@
 
     // //Stop playing on close
     $('#video-modal').on('hidden.bs.modal', function (e) {
-      $('#video-modal'+' iframe').attr('src', ""); //stop video
+      $('#video-modal' + ' iframe').attr('src', ""); //stop video
     });
 
-    // $.ajax("test.json",
-    //   {
-    //     success: (data) => {
-    //       console.log(data);
-    //       console.log(data[0].snippet);
-    //       for (const [key, value] of Object.entries(data[0].snippet)) {
-    //         console.log(key, value);
-    //       }
-    //       app.videos = data;
-    //     }
-    //   });
+    $.ajax("test.json",
+      {
+        success: (data) => {
+          console.log(data);
+          console.log(data[0].snippet);
+          for (const [key, value] of Object.entries(data[0].snippet)) {
+            console.log(key, value);
+          }
+          app.videos = data;
+        }
+      });
   </script>
 </body>
 
