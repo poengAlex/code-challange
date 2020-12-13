@@ -22,6 +22,8 @@
         </div>
         <button type="submit" class="btn btn-primary mb-2">Search</button>
       </form>
+      <p v-if="videos.length>0" class="w-100 text-center">Showing {{videosOnThisPage}} of {{results}}</p>
+      <p v-if="videos.length==0" class="w-100 text-center">No results</p>
     </div>
     <div class="row row-cols-1 row-cols-md-4">
       <div v-on:click="showVideo(video)" v-for="video in videos" class="col mb-4">
@@ -34,42 +36,6 @@
       </div>
     
     </div>
-    <!-- <div class="row">
-      <div class="col-md-3">
-        <div v-for="video in videos" v-on:click="showVideo(video)" class="card">
-          <!-- <img v-bind:src="video.snippet.thumbnails.default.url" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">{{video.snippet.title}}</h5>
-          </div> -->
-          <!-- <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div> -->
-        <!--
-      </div>
-    </div>
-    <div class="row">
-      <div v-for="video in videos"  class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-      </div>
-    </div> -->
 
   </div>
 
@@ -105,6 +71,10 @@
       data: {
         videos: [],
         q: "",
+        pages: 0,
+        results: 0,
+        videosPerPage: 20,
+        videosOnThisPage: 0,
       },
       methods: {
         showVideo: (video) => {
@@ -128,13 +98,17 @@
                 order: "viewCount",
                 eventType: "live",
                 type: "video",
-                maxResults: 20,
+                maxResults: app.videosPerPage,
                 q: app.q,
 
               },
               success: (data) => {
                 console.log(data);
+                app.pages = Math.ceil(data.pageInfo.totalResults / data.pageInfo.resultsPerPage);
+                app.results = data.pageInfo.totalResults;
+                app.videosOnThisPage = Math.min(data.pageInfo.totalResults,app.videosPerPage);
                 app.videos = data.items;
+                
               },
               complete: (data) => {
                 // console.log(data.responseJSON)
